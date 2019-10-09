@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
 function App() {
   /**
@@ -45,6 +45,13 @@ function App() {
     localStorage.setItem('techs', JSON.stringify(techs));
   }, [techs]);
 
+  /**
+   * Usando o hook useMemo() para calcular o tamanho do array, sempre que alterar
+   * somente quando a variável techs mudar. Já que se usassemos o techs.length
+   * ele seria chamado com qualquer mudança
+   */
+  const techSize = useMemo(() => techs.length, [techs]);
+
   return (
     // Criando um fragment para ter mais de um componente dentro de um componente
     <>
@@ -54,7 +61,8 @@ function App() {
           <li key={tech}>{tech}</li>
         ))}
       </ul>
-
+      <strong>Você tem {techSize} tecnologias</strong>
+      <br />
       {/** Um input com a função que pega o valor digitado */}
       <input value={newTech} onChange={e => setNewTech(e.target.value)} />
 
