@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function App() {
   /**
@@ -6,7 +6,7 @@ function App() {
    * ele retorna o própio estado, e na segunda posição ele retorna uma função
    * para alterar o estado
    */
-  const [techs, setTech] = useState(['ReactJS', 'React Native']);
+  const [techs, setTech] = useState([]);
   /**
    * E ele recebe como parametro o valor inicial do elemento que quer
    * adicionar um estado.
@@ -18,6 +18,32 @@ function App() {
     setTech([...techs, newTech]);
     setNewTech('');
   }
+
+  /**
+   * Aqui o useEffect() está sendo usado com o intuito de executar somente quando
+   * o componente é montado, porque ele não está monitorando nenhuma variável como
+   * segundo parâmetro.
+   */
+  useEffect(() => {
+    const storageTechs = localStorage.getItem('techs');
+
+    if (storageTechs) {
+      setTech(JSON.parse(storageTechs));
+    }
+  }, []);
+
+  /**
+   * O useEffect() é um hook responsável por substituir os componentes do ciclo
+   * de vida como o componentDidUpdate(), componentDidMount(). Ele vai receber
+   * dois parâmetros, o primeiro é a função que será executada, o segundo parâmetro
+   * é quando a função vai ser executada.
+   * O segundo parâmetro é um array de dependência onde ele escuta as mudanças que
+   * ocorrem em certas variáveis.
+   */
+  useEffect(() => {
+    // O array de techs sempre que for alterado vai ser carregado no localStorage
+    localStorage.setItem('techs', JSON.stringify(techs));
+  }, [techs]);
 
   return (
     // Criando um fragment para ter mais de um componente dentro de um componente
