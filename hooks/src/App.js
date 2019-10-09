@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 
 function App() {
   /**
@@ -14,10 +14,16 @@ function App() {
   const [newTech, setNewTech] = useState(['']);
 
   // Fazendo uma função para adicionar novos valores
-  function handleAdd() {
+  /**
+   * Usando o useCallback() para evitar a criação da mesma função toda vez que
+   * é alterada alguma variável e assim consumindo mais processamento do JS.
+   * Logo quando usamos o useCallback() ele preserva a função e só é montada
+   * quando tiver alterações em uma das variáveis.
+   */
+  const handleAdd = useCallback(() => {
     setTech([...techs, newTech]);
     setNewTech('');
-  }
+  }, [newTech, techs]);
 
   /**
    * Aqui o useEffect() está sendo usado com o intuito de executar somente quando
@@ -46,9 +52,9 @@ function App() {
   }, [techs]);
 
   /**
-   * Usando o hook useMemo() para calcular o tamanho do array, sempre que alterar
-   * somente quando a variável techs mudar. Já que se usassemos o techs.length
-   * ele seria chamado com qualquer mudança
+   * Usando o hook useMemo() para calcular o tamanho do array, porque ele retorna
+   * um único valor, sempre que alterar somente quando a variável techs mudar.
+   * Já que se usassemos o techs.lengthele seria chamado com qualquer mudança
    */
   const techSize = useMemo(() => techs.length, [techs]);
 
